@@ -1,0 +1,50 @@
+#!/bin/sh
+
+ADDONNAME=sonos2
+
+CONFIGDIR=/usr/local/etc/config
+RCDDIR=$CONFIGDIR/rc.d
+ADDONDIR=$CONFIGDIR/addons/$ADDONNAME
+WWWDIR=$CONFIGDIR/addons/www/$ADDONNAME
+
+
+mkdir -p /usr/local
+if [ "$1" == "CCU2" ]; then
+	if [ "`mount | grep ubi1:user | grep /usr/local | wc -l`" -eq 0 ]; then
+		mount -t ubifs ubi1:user /usr/local
+	fi
+else
+	if [ "`mount | grep mtdblock3 | wc -l`" -eq 0 ]; then
+	        mount /dev/mtdblock3
+	fi
+fi
+
+# Autostart-Script anlegen
+cp ./$ADDONNAME $RCDDIR
+chmod +x $RCDDIR/$ADDONNAME
+
+# Web-Konfiguration anlegen
+mkdir -p $WWWDIR
+cp -rp www/* $WWWDIR
+chmod -R 755 $WWWDIR
+
+# Addon-Verzeichnis anlegen
+mkdir -p $ADDONDIR
+cp -rp addon/* $ADDONDIR
+chmod -R 755 $ADDONDIR
+chown -R root $ADDONDIR
+chgrp -R root $ADDONDIR
+
+if [ "$1" == "CCU2" ]; then
+	umount /usr/local
+else
+	umount /usr/local
+	umount /mnt
+	
+	lcdtool "Reboot...             "
+	lcdtool -a 0x40 -t bin 00
+
+	echo "x" > /dev/watchdog
+	reboot
+	while true ; do true ;  done
+fi

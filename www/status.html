@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="settings">
+    <meta name="author" content="Ivo Doehler">
+    <meta name="language" content="de, german">
+<title>Status</title>
+<!-- Bootstrap core CSS -->
+<link href="public/css/bootstrap.min.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="public/css/custombootstrap.css" rel="stylesheet">
+<link href="public/css/custom.css" rel="stylesheet">
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+<body class='body-blu' style="zoom: 1; margin-top: 60px;"> 
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+         <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://www.sonos.de"  target="_blank"><img src="public/img/logo.png" alt=""> &nbsp;
+ Sonos &nbsp;</a>
+      </div>
+   <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav ">
+        <li class="active"><a href="status.cgi<%zone%>">Home</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="sonos2.cgi<%zone%>">Sonos-Script</a></li>
+        <li><a href="settings/udp.cgi<%zone%>">Topology</a></li>
+        <li><a href="settings/settings.cgi<%zone%>">Einstellungen</a></li>
+       </ul>        
+     </div><!--/.nav-collapse -->
+  </div><!-- class="container" -->
+</div><!-- class="navbar ..." -->
+
+
+
+<div class="container center1 col-md-8" id="content"> 
+<!-- Form Name -->
+<legend>Status</legend>
+<noscript>
+<p class="lead">Ohne Javascript funktioniert diese Seite nicht!</p>
+</noscript>
+<div class="se-pre-con"></div>
+<div id='main'></div>
+<div id='error'></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="public/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+// Variablen
+varUdpTimer = null;
+sonos = [];
+ip="";
+l=0;
+
+function udpCall() {
+  var aj = getAjax();
+  if(aj==null)  {
+    setSonos("Error: Ihr Browser unterstützt kein Ajax!");
+    return;
+  }
+  aj = null;
+  $(".se-pre-con").fadeIn("fast");
+  data = { udp : 1};
+  $.ajax({
+      type:"POST",
+      data: data, 
+      url: "server.cgi",
+      success: function(data){
+        // console.log(data);
+          setSonos(data);
+      },
+      error:  function( jqXHR, textStatus, errorThrown ) {
+            setSonos("Error: " + textStatus);
+      }
+    }); // END Ajax 
+    
+}
+function udpRefresh() {
+  data = { udprefresh : 1};
+  $.ajax({
+      type:"POST",
+      data: data, 
+      url: "server.cgi",
+      success: function(data){
+        // console.log(data);
+          setSonosRefresh(data);
+      }
+    }); // END Ajax 
+    
+}
+
+function col1Click(t) {
+   var sonosArray = sonos.split(",");
+  for (i = 0; i < l; i++) { 
+    var id = sonosArray[++i].replace(/\./g,"_");
+    $("#" + id).attr('class', 'bg-info');
+  }
+  ip = t.id.replace(/_/g,".");
+  $("#" + t.id).attr('class', 'bg-primary');
+  $("#col2").html(ip);
+}  
+
+// sendSonos
+function setSonosRefresh(udp) {
+  if (udp != sonos) setSonos (udp);
+}
+
+function setSonos(udp) {
+	var patt = new RegExp("Error: ");
+	if ((udp == "No Sonosplayer found!") || (patt.test(udp))) {
+		var html = "<div class='panel panel-warning'><div class='panel-heading'><h3 class='panel-title'>No Sonosplayer found!" + 
+			"</h3></div><div class='panel-body'>Die UDP-Anfrage hat in Ihrem Netzwerk keine Sonosplayer gefunden.</div>";
+		if (udp != "No Sonosplayer found!") {
+			html += "<div class='panel-footer'>" + udp + "</div>";
+		}
+		html += "</div>" +
+		"<form class='form-horizontal' action='' method='POST' name='f_edit' id='f_edit'  onsubmit='this.js_aktiv.value=1;'>" +
+		"<fieldset>" +
+		"<!-- Textarea -->" +
+		"<input name='js_aktiv' type='hidden' value='0' />" +
+		"<div class='form-group'>" +
+		"  <div class='col-md-6'>" +
+		"  <button type='button' id='udpbutton' name='udpbutton' class='btn btn-primary custom1' value='udp' onclick='udp();'>" +
+		"  <span class='glyphicon glyphicon-refresh'></span> Reload</button>" +
+		"</div></div></fieldset></form>";
+		$('#error').html(html);
+		$(".se-pre-con").fadeOut("slow");
+		return;
+	}
+  sonos = udp;
+  var sonosArray = sonos.split(",");
+  l = sonosArray.length;
+  text="<table class='table table-responsive table-bordered'><thead><tr><th>Räume</th><th>aktuell</th><th>Liste</th></tr></thead><tbody>";
+  for (i = 0; i < l; i++) { 
+    var bgclass = "bg-info";
+    name = sonosArray[i++];
+    if (i == 1 && ip == "")  ip = sonosArray[i];
+    if (ip == sonosArray[i]) bgclass="bg-primary";
+    id = sonosArray[i].replace(/\./g,"_");
+    if (i == 1) {
+      text += "<tr><td class='" + bgclass + "' id='" + id + "' onclick='col1Click(this);' width='33%'>" + name + 
+        "</td><td id='col2' width='33%' rowspan='" + l/2 + "' class='bg-primary'><td width='33%' rowspan='" + l/2 + "' class='bg-primary' id='col3'></td></tr>";
+    } else {
+      text += "<tr><td class='" + bgclass + "' id='" + id + "' onclick='col1Click(this);'>" + name + "</td></tr>";
+    }
+  }
+  text += "</tbody></table>"
+  $('#main').html(text);
+  $('#col2').html(sonos);
+  // $('#col3').html(sonos[2]);
+  $(".se-pre-con").fadeOut("slow");
+}
+
+function log(text) {
+  data = { Logtext : text};
+  if (arguments.length > 1) {
+    data = { Logtext : text, append: 1}
+  }
+  $.ajax({
+      type:"POST",
+      data: data, 
+      url: "server.cgi",
+      success: function(data){
+     },
+    }); // END Ajax 
+    
+}
+
+function getAjax() {
+ var ajax = null;
+  if(window.XMLHttpRequest){ //Google Chrome, Mozilla Firefox, Opera, Safari, IE 10
+      ajax = new XMLHttpRequest();
+  }
+  else if(window.ActiveXObject){ // Internet Explorer 9 und niedriger
+      try{
+          ajax = new ActiveXObject("Msxml2.XMLHTTP.6.0");
+      } catch(e){
+          try{
+              ajax = new ActiveXObject("Msxml2.XMLHTTP.3.0");
+          }
+          catch(e){}
+      }
+  }
+  return ajax;
+}
+
+$(window).bind('beforeunload', function(eventObject) {
+    log("Dies ist das Ende!");
+    log("Dies ist das aller Ende!");
+    return;
+}); 
+
+$(document).ready(function() {
+  udpCall();
+  varUdpTimer = window.setInterval(function () {udpRefresh();}, 5000);
+
+});
+
+</script>
+</body></html>

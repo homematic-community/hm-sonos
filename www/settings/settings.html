@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="settings">
+    <meta name="author" content="Ivo Doehler">
+    <meta name="language" content="de, german">
+<title>Settings</title>
+<!-- Bootstrap core CSS -->
+<link href="../public/css/bootstrap.min.css" rel="stylesheet">
+<link href="../public/css/bootstrapValidator.min.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="../public/css/custombootstrap.css" rel="stylesheet">
+<style type="text/css">
+.custom {
+    width: 100px !important;
+}
+
+</style>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+<body style="zoom: 1; margin-top: 60px;"> 
+<style type="text/css">
+
+.navbar-fixed-top .nav {
+    padding: 0px 0;
+}
+.navbar-nav > li > a, .navbar-brand {
+    height: 20px;
+}
+.navbar {min-height:28px !important;}
+@media(min-width:768px) {
+
+    .navbar-fixed-top .navbar-brand {
+        padding: 11px 0;
+    }
+}
+</style>
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+         <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://www.sonos.de"  target="_blank"><img src="../public/img/logo.png" alt=""> &nbsp;
+ Sonos &nbsp;</a>
+      </div>
+   <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav ">
+        <li class="active"><a href="../status.cgi<%zone%>">Home</a></li>
+          
+      
+      
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="../sonos2.cgi<%zone%>">Sonos-Script</a></li>
+        <li><a href="udp.cgi<%zone%>">Topology</a></li>
+        <li><a href="settings.cgi<%zone%>">Einstellungen</a></li>
+       </ul>        
+     </div><!--/.nav-collapse -->
+  </div><!-- class="container" -->
+</div><!-- class="navbar ..." -->
+
+
+
+<div class="container center1 col-md-8" id="content"> 
+<%message%>
+<!-- Form Name -->
+<legend>Settings</legend>
+
+<form class="form-horizontal" action='' method="POST" name='f_edit' id='f_edit'  onsubmit='this.js_aktiv.value=1;'>
+<fieldset>
+<!-- Textarea -->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="sonoszone">Sonoszone</label>
+  <div class="col-md-6">                     
+    <textarea class="form-control" id="sonoszone" name="sonoszone" rows="4"><%sonoszone%></textarea>
+  <span class="help-block helpSonoszone"><%helpSonoszone%> </span>  
+  </div>
+</div>
+<input name='js_aktiv' type='hidden' value='0' />
+<input name='udp' type='hidden' value='0' />
+<div class="form-group">
+  <label class="col-md-2 control-label" for="udp">&nbsp;</label>
+  <div class="col-md-6">
+  <button type='submit' id='udpbutton' name='udpbutton' class='btn btn-primary' value='udp' onclick="this.form.udp.value=1;">
+  <span class="glyphicon glyphicon-refresh"></span> Read Zoneplayers (per UDP)</button>
+</div>
+</div>
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="stdvolume">Standard-Volume</label>  
+  <div class="col-md-6">
+  <input id="stdvolume" name="stdvolume" type="text" placeholder="1 - 99" class="form-control input-md" required="" value="<%stdvolume%>">
+  <span class="help-block helpStdvolume"><%helpStdvolume%></span>  
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="volumeup">Volume-Up</label>  
+  <div class="col-md-6">
+  <input id="volumeup" name="volumeup" type="text" placeholder="5" class="form-control input-md"  value="<%volumeup%>">
+  <span class="help-block helpVolumeup"><%helpVolumeup%> </span>  
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="volumedown">Volume-Down</label>  
+  <div class="col-md-6">
+  <input id="volumedown" name="volumedown" type="text" placeholder="5" class="form-control input-md"  value="<%volumedown%>">
+  <span class="help-block helpVolumedown"><%helpVolumedown%> </span>  
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="messagevolume">Message-Volume</label>  
+  <div class="col-md-6">
+  <input id="messagevolume" name="messagevolume" type="text" placeholder="10 - 20" class="form-control input-md"  value="<%messagevolume%>">
+  <span class="help-block  helpMessagevolume"><%helpMessagevolume%> </span>  
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="messagespeicher">Messagespeicherpfad</label>  
+  <div class="col-md-6">
+  <input id="messagespeicher" name="messagespeicher" type="text" placeholder="/Temp" class="form-control input-md"  value="<%messagespeicher%>">
+  <span class="help-block helpMessagespeicher"><%helpMessagespeicher%> </span>  
+  </div>
+</div>
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="timeout">Timeout für Soapanfragen</label>  
+  <div class="col-md-6">
+  <input id="timeout" name="timeout" type="text" placeholder="3" class="form-control input-md"  value="<%timeout%>">
+  <span class="help-block helpTimeout"><%helpTimeout%> </span>  
+  </div>
+</div>
+
+<!-- Textarea -->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="radio">Radioliste</label>
+  <div class="col-md-6" rows="4">                     
+    <textarea class="form-control" id="radio" name="radio" rows="10"><%radio%></textarea>
+  <span class="help-block helpRadio"><%helpRadio%> </span>  
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="save">&nbsp;Speichern</label>
+  <div class="col-md-6">
+    <button type='submit' id="save" name="save" class="btn btn-default btn-customedit custom"><span class="glyphicon glyphicon-thumbs-up"></span> Save</button>
+    <noscript><button type='submit' id='resetBtn' name='resetBtn' class='btn btn-default btn-customdelete custom' value='reset'></noscript>
+    <script type="text/javascript">document.write("<button type='reset' id='resetBtn' name='resetBtn' class='btn btn-default btn-customdelete custom' value='reset'>");
+    </script>
+  <span class="glyphicon glyphicon-thumbs-down"></span> Reset</button>
+</div>
+
+</fieldset>
+</form>
+</div>
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="../public/js/bootstrap.min.js"></script>
+<script src="../public/js/bootstrapValidator.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#f_edit').bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+     live: 'submitted',
+     fields: {
+           sonoszone: {
+                container: ".helpSonoszone",
+                message: 'Die Sonoszonen sind ungültig',
+                validators: {
+                    notEmpty: {
+                        message: 'Die Sonoszonen müssen eingegeben werden'
+                    },
+                    stringLength: {
+                        min: 20,
+                        message: 'Die Sonoszonen müssen mindestens 20 Zeichen lang sein'
+                    },
+                }
+            },
+           stdvolume: {
+                container: ".helpStdvolume",
+                message: 'Das Standard-Volume ist ungültig',
+                validators: {
+                    notEmpty: {
+                        message: 'Das Standard-Volume muss eingegeben werden'
+                    },
+                     integer: {
+                        message: 'Das Standard-Volume muss eine Zahl sein'
+                    },
+                     between: {
+                        min: 0,
+                        max: 100,
+                        message: 'Das Standard-Volume muss zwischen 0 und 100 sein'
+                    }
+              }
+            },
+           volumeup: {
+                container: ".helpVolumeup",
+                message: 'Das VolumeUp ist ungültig',
+                validators: {
+                    notEmpty: {
+                        message: 'Das VolumeUp muss eingegeben werden'
+                    },
+                     integer: {
+                        message: 'Das VolumeUp muss eine Zahl sein'
+                    },
+                     between: {
+                        min: 1,
+                        max: 20,
+                        message: 'Das VolumeUp muss zwischen 1 und 20 sein'
+                    }
+              }
+            },
+           volumedown: {
+                container: ".helpVolumedown",
+                message: 'Das VolumeDown ist ungültig',
+                validators: {
+                    notEmpty: {
+                        message: 'Das VolumeDown muss eingegeben werden'
+                    },
+                     integer: {
+                        message: 'Das VolumeDown muss eine Zahl sein'
+                    },
+                     between: {
+                        min: 1,
+                        max: 20,
+                        message: 'Das VolumeDown muss zwischen 1 und 20 sein'
+                    }
+              }
+            },
+           messagevolume: {
+                container: ".helpMessagevolume",
+                message: 'Das Messagevolume ist ungültig',
+                validators: {
+                     integer: {
+                        message: 'Das Messagevolume muss eine Zahl sein'
+                    },
+                     between: {
+                        min: 1,
+                        max: 100,
+                        message: 'Das Messagevolume muss zwischen 1 und 100 sein'
+                    }
+              }
+            },
+           messagespeicher: {
+                container: ".helpMessagespeicher",
+                message: 'Der Messagepfad ist ungültig',
+                validators: {
+                    notEmpty: {
+                        message: 'Der Messagepfad muss eingegeben werden'
+                    },
+              }
+            },
+           timeout: {
+                container: ".helpTimeout",
+                message: 'Timeout ist ungültig',
+                validators: {
+                    notEmpty: {
+                        message: 'Das Timeout muss eingegeben werden'
+                    },
+                      integer: {
+                        message: 'Das Timeout muss eine Zahl sein'
+                    },
+                     between: {
+                        min: 1,
+                        max: 10,
+                        message: 'Das Timeout muss zwischen 1 und 10 s sein'
+                    }
+             }
+            },
+           radio: {
+                container: ".helpRadio",
+                message: 'Die Radioliste ist ungültig',
+                validators: {
+                    stringLength: {
+                        min: 5,
+                        message: 'Die Radioliste sollte mindestens 5 Zeichen lang sein'
+                    },
+              }
+            },
+
+        }
+    });
+  $('#udpbutton').click(function() {
+        $('#f_edit').data('bootstrapValidator').defaultSubmit();
+    });
+  $('#resetBtn').click(function() {
+        $('#message').alert('close');
+        $('#f_edit').data('bootstrapValidator').resetForm();
+    });
+ $('#save').click(function() {
+        $('#message').alert('close');
+    });
+
+});
+  
+</script>
+</body></html>
