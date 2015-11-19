@@ -24,7 +24,7 @@ case "$1" in
     echo "Info: <b>Sonos CCU Addon</b><br>"
     echo "Info: Usage: <a href="/addons/${ADDONNAME}/sonos2.cgi" target="_blank">http://$(hostname)/addons/${ADDONNAME}/sonos2.cgi</a>"
     echo "Info: <a href='https://github.com/jens-maus/hm-sonos'>https://github.com/jens-maus/hm-sonos</a>"
-    echo "Name: Sonosscripte f&uuml;r die CCU2"
+    echo "Name: Sonos Control"
     echo "Operations: uninstall restart stop start"
     echo "Config-Url: $CONFIG_URL"
     echo "Update: /addons/${ADDONNAME}/update-check.cgi"
