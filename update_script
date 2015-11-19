@@ -43,6 +43,10 @@ elif [ "$1" == "HM-RASPBERRYMATIC" ]; then
   cp -a ccurm/* ${WWWDIR}/bin/
 fi
 
+# add menu entry
+touch /usr/local/etc/config/hm_addons.cfg
+${WWWDIR}/bin/update_addon sonos2 ${ADDONDIR}/sonos2_addon.cfg
+
 # sync filesystem to make sure all changes are written to disk
 sync
 

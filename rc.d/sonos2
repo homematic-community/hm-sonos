@@ -20,12 +20,12 @@ case "$1" in
 
   info)
     VER=$(cat ${ADDONDIR}/VERSION)
-    echo "Version: ${VERS}"
-    echo "Info: <b>Sonos CCU Addon</b><br>"
-    echo "Info: Usage: <a href="/addons/${ADDONNAME}/sonos2.cgi" target="_blank">http://$(hostname)/addons/${ADDONNAME}/sonos2.cgi</a>"
+    echo "Version: ${VER}"
+    echo "Info: <b>Sonos Player CCU Addon</b><br>"
+    echo "Info: Copyright (c) 2014-2015 fiveyears, Jens Maus<br>"
     echo "Info: <a href='https://github.com/jens-maus/hm-sonos'>https://github.com/jens-maus/hm-sonos</a>"
-    echo "Name: Sonos Control"
-    echo "Operations: uninstall restart stop start"
+    echo "Name: Sonos Player"
+    echo "Operations: uninstall restart"
     echo "Config-Url: $CONFIG_URL"
     echo "Update: /addons/${ADDONNAME}/update-check.cgi"
     ;;
@@ -43,10 +43,12 @@ case "$1" in
     tclsh $STOP_SCRIPT
     cd ${RCDDIR}
   
+    ${WWWDIR}/bin/update_addon ${ADDONNAME}
     rm -rf ${ADDONDIR}
     rm -rf ${WWWDIR}
     rm -rf ${AUTOSTART_SCRIPT}
     ;;
+
   *)
     echo "usage:"
     echo "  ${ADDONNAME} [info|start|stop|restart|uninstall]"
