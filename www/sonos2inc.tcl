@@ -30,7 +30,7 @@ proc url-decode str {
 
 set fconfig [file join [file dirname [info script]] settings/sonos.cfg]
 set flog sonos.log
-set linux [file join [file dirname [info script]] linux]
+set bin [file join [file dirname [info script]] bin]
 # namespace Config
 # read and write sonos.cfg
 
@@ -1922,11 +1922,11 @@ proc VolumeDown {{array "sonosArray"}} {
 }
 
 proc Udp { {verbose 0} } {
-  variable linux
+  variable bin
 
   set file_data ""
   catch {
-      set file_data [exec $linux/newudp | grep -i -B 1 Sonos\/]
+      set file_data [exec $bin/newudp | grep -i -B 1 Sonos\/]
   }
   set ZoneGroupTopology(ZoneGroupCount) 0
   if { $file_data != ""} {

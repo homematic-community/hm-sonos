@@ -1,0 +1,54 @@
+#!/bin/sh
+
+ADDONNAME=sonos2
+RCDDIR=/usr/local/etc/config/rc.d
+ADDONDIR=/usr/local/etc/config/addons/${ADDONNAME}
+WWWDIR=/usr/local/etc/config/addons/www/${ADDONNAME}
+
+AUTOSTART_SCRIPT=${ADDONNAME}
+START_SCRIPT=${ADDONNAME}.tcl
+STOP_SCRIPT=stop.tcl
+CONFIG_URL=/addons/${ADDONNAME}/settings/settings.cgi
+
+# change to addon directory
+cd ${ADDONDIR}
+
+case "$1" in
+  ""|start)
+  	tclsh $START_SCRIPT &
+  	;;
+
+  info)
+    VER=$(cat ${ADDONDIR}/VERSION)
+  	echo "Version: ${VERS}"
+  	echo "Info: <b>Sonos CCU Addon</b><br>"
+    echo "Info: Usage: <a href="/addons/${ADDONNAME}/sonos2.cgi" target="_blank">http://$(hostname)/addons/${ADDONNAME}/sonos2.cgi</a>"
+    echo "Info: <a href='https://github.com/jens-maus/hm-sonos'>https://github.com/jens-maus/hm-sonos</a>"
+  	echo "Name: Sonosscripte f&uuml;r die CCU2"
+  	echo "Operations: uninstall restart stop start"
+  	echo "Config-Url: $CONFIG_URL"
+    echo "Update: /addons/${ADDONNAME}/update-check.cgi"
+  	;;
+
+  restart)
+  	tclsh $STOP_SCRIPT
+  	tclsh $START_SCRIPT &
+  	;;
+
+  stop)
+  	tclsh $STOP_SCRIPT
+  	;;
+
+  uninstall)
+  	tclsh $STOP_SCRIPT
+    cd ${RCDDIR}
+  
+  	rm -rf ${ADDONDIR}
+  	rm -rf ${WWWDIR}
+  	rm -rf ${AUTOSTART_SCRIPT}
+  	;;
+  *)
+  	echo "usage:"
+  	echo "  ${ADDONNAME} [info|start|stop|restart|uninstall]"
+  	;;
+esac
