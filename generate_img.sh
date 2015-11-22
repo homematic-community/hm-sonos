@@ -3,6 +3,7 @@ mkdir -p tmp
 cp -a sonos2 tmp/
 cp -a rc.d tmp/
 cp -a www tmp/
+cp -a ccu1 tmp/
 cp -a ccu2 tmp/
 cp -a ccurm tmp/
 cp -a update_script tmp/
