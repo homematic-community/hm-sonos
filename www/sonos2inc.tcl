@@ -484,6 +484,7 @@ proc parseQuery { } {
       set args(action) $action
     }
     if { $argc > 2 } {
+      if { $action == "removemember" || $action == "addmember" } {set action "member"}
       set args($action)  [string tolower [lindex $argv 2]]
     } 
 
