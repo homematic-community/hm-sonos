@@ -846,9 +846,12 @@ CONTENT-TYPE: text/xml; charset="utf-8"
 CONTENT-LENGTH: [string length $xml]
 
 }
-set response [fromHtml [soapSend "[subst $header]$xml" $IP]]
-#puts $response
-return $response
+set response [soapSend "[subst $header]$xml" $IP]
+if {[string match -nocase {*TRANSFER-ENCODING: chunked*} $response]} {
+      regsub -all {\n[0-9a-zA-Z]+\n} "$response" {} response
+      regsub -all {^[0-9a-zA-Z]+\n} "$response" {} response
+}
+return [fromHtml $response]
 }
 
 
@@ -1028,7 +1031,7 @@ proc AddPlaylistItem {item id nr {parentID ""}} {
 proc GetCurrentPlaylist {{array "sonosArray"}} {
   global playlistcount
   set xml "<ObjectID>Q:0</ObjectID><BrowseFlag>BrowseDirectChildren</BrowseFlag><Filter></Filter><StartingIndex>0</StartingIndex><RequestedCount>1000</RequestedCount><SortCriteria></SortCriteria>"
-  set response [getResponse /MediaServer/ContentDirectory Browse $array $xml]
+  set response [getResponse /MediaServer/ContentDirectory Browse $array $xml]  
   if {[string match -nocase {HTTP/1.1 200 OK*} $response]} {
     #log "$response" "w"
     set trunk [url-decode $response]
@@ -1110,6 +1113,19 @@ proc GetPlaylist {objectID {array "sonosArray"}} {
     }
   } else {
     log $response "w" 
+  }
+}
+
+
+proc setPartymodus {{array "sonosArray"} } {
+  if {"No Sonosplayer found!" == $Cfg::sonoszone} {
+    exit
+  }
+  set zone [sonosGet Zone $array]
+  foreach {name ip} $Cfg::sonoszone {
+    if {$zone !=  $name } {
+      addMember $name
+    }
   }
 }
 
@@ -1781,11 +1797,10 @@ proc playMessage { message volume {array "sonosArray"}} {
   while { $abort == 0} {
     GetPositionInfo
     if { $info(TrackDuration) <= $info(RelTime) } {;# abgespielt
-      after 2000 ;# bissel länger
+      after 3000 ;# bissel länger
       set abort 1
     }
   }
-  RemoveTrackFromQueue $playlistcount
   # Wieder alten Zustand herstellen
   SetVolume $oldVolume
   SetMute $mute
@@ -1825,6 +1840,17 @@ proc playMessage { message volume {array "sonosArray"}} {
       Play
     }
   }
+  # sometimes it doesn't play after message
+  if {$state == "PLAYING"} {
+    GetTransportInfo $array
+    if {[info exists info(CurrentTransportState)]}   {
+      set newstate $info(CurrentTransportState)
+    }
+    if {$state != $newstate} {
+      Play
+    }
+  }
+  RemoveTrackFromQueue $playlistcount
 }
 
 #/**
@@ -1975,7 +2001,7 @@ proc ParseZonegroups {response {verbose 0} } {
           foreach {key val} $Xml::attribute {
             set ZoneGroupTopology($i,$j,$key) "$val"
           }
-          if { ($ZoneGroupTopology($i,$j,IsZoneBridge) != "1") &&  ($ZoneGroupTopology($i,$j,UUID) == $ZoneGroupTopology($i,Coordinator))} {
+          if { ($ZoneGroupTopology($i,$j,IsZoneBridge) != "1") &&  ($ZoneGroupTopology($i,$j,Invisible) == "0")} {
               set ZoneGroupTopology($i,ZoneName) $ZoneGroupTopology($i,$j,ZoneName)
               lappend l $ZoneGroupTopology($i,$j,ZoneName)
               regexp "http://(.*?):1400/xml/" $ZoneGroupTopology($i,$j,Location) junk ip
@@ -2039,4 +2065,48 @@ proc ParseZonegroups {response {verbose 0} } {
     return $strZoneGroupStateBridge
   }
   return $l
+}
+###
+proc testMember { {onlyFirst "1"} {array "sonosArray"}} {
+  global ZoneGroupTopology
+  set ip  [sonosGet IP]
+  if {"$ip" == ""} {
+    set ret "Zone not found!"
+    return $ret
+  }
+  set name  [sonosGet Zone ]
+  set response [getResponse /ZoneGroupTopology GetZoneGroupState $ip]
+  ParseZonegroups $response 
+  if { ! [info exists ZoneGroupTopology(ZoneGroupCount)] } {
+    set ret "Topology parse error!"
+    return $ret
+  }
+  for {set x 1} {$x<=$ZoneGroupTopology(ZoneGroupCount)} {incr x} {
+    if {$ZoneGroupTopology($x,1,IsZoneBridge) == "0"} {
+      set count 0
+      set l {}
+      for { set y 1} {$y<=$ZoneGroupTopology($x,ZoneGroupMemberCount) } {incr y} {
+        if { $ZoneGroupTopology($x,$y,Invisible) == "0" } {
+          incr count
+          #puts "count: $count hier: $x $y $ZoneGroupTopology($x,$y,ZoneName)"
+          if {$ZoneGroupTopology($x,$y,ZoneName) != $name} {
+            lappend l $ZoneGroupTopology($x,$y,ZoneName)
+          }
+        }
+      }
+      if { $count == "1" && $ZoneGroupTopology($x,1,ZoneName) == $name} {
+        set ret "$name is alone"
+        return "";#$ret""
+      } 
+      if { $count > "1" } {
+        set ret $l
+      }
+     
+    }
+  }
+  if { $onlyFirst == "1"} {
+    return "[lindex $ret 0]"
+  } {
+    return $ret
+  }
 }

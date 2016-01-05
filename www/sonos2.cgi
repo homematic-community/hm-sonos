@@ -1,6 +1,5 @@
 #!/usr/bin/env tclsh
 source [file join [file dirname [info script]] sonos2inc.tcl] ;# Include-File
-
 #####################################################################################
 #
 # tlc version in Anlehnung an PHP-Version, Device-Spy und Wireshark
@@ -57,6 +56,8 @@ source [file join [file dirname [info script]] sonos2inc.tcl] ;# Include-File
 #                     member=Playername
 #     removeMember                              -> entfernt Player aus Gruppe
 #                     member=Playername
+#     partymodus                                -> alle Player in eine Gruppe
+#
 #     playMessage                               -> entfernt Player aus Gruppe
 #                     message=file.ext          -> z. B. action=message&message=Hallo.m4a
 #                     message=file.ext          -> z. B. action=message&message=1.mp3
@@ -104,6 +105,10 @@ if {[info exists args(zone)]} {
                   }
                   playMessage $args(message) $vol
                }
+            }
+            partymodus {
+               setPartymodus
+               
             }
             addmember {
                if {[info exists args(member)]} {
@@ -176,7 +181,6 @@ if {[info exists args(zone)]} {
                } else {
                   set volume $Cfg::stdvolume
                }
-               puts [sonosGet Rampto]
                RampToVolume $volume [sonosGet Rampto]
             }
             sleep {
@@ -287,6 +291,7 @@ if {[info exists args(action)]} {
    set action $args(action)
    switch $action {
       message -
+      partymodus -
       addmember -
       removemember -
       radio -
