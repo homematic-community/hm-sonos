@@ -14,6 +14,6 @@ cp -a update_script tmp/
 cp -a VERSION tmp/sonos2/
 cd tmp
 
-$tar --owner=root --group=root -czvf ../sonos2-addon-$(cat ../VERSION).tar.gz *
+$tar --owner=root --group=root --exclude=.DS_Store -czvf ../sonos2-addon-$(cat ../VERSION).tar.gz *
 cd ..
 rm -rf tmp
