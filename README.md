@@ -1,11 +1,10 @@
 # HomeMatic Sonos Player Addon
 This repository hosts the development on a HomeMatic CCU-Addon for enabling a CCU to control Sono type audio players (www.sonos.com) from within the WebUI user interface. 
 
-## Supported CCU Devices
-An installation of the Addon is currently supported on the following CCU devices:
+## Supported CCU models
+* [HomeMatic CCU3](https://www.eq-3.de/produkte/homematic/zentralen-und-gateways/smart-home-zentrale-ccu3.html) / [RaspberryMatic](http://raspberrymatic.de/)
+* [HomeMatic CCU2](https://www.eq-3.de/produkt-detail-zentralen-und-gateways/items/homematic-zentrale-ccu-2.html)
 * HomeMatic CCU1
-* HomeMatic CCU2
-* RaspberryMatic (beta)
 
 ## Installation
 1. Download the latest Addon release (https://github.com/jens-maus/hm-sonos/releases)
