@@ -209,9 +209,8 @@ if {[info exists args(zone)]} {
             play {
 			   if {[info exists args(url)]} {
                   SetAVTransportURI $args(url)
-               } else {
-                  Play
                }
+               Play
             }
             pause {
                Pause
