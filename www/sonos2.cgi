@@ -207,7 +207,7 @@ if {[info exists args(zone)]} {
                VolumeDown
             }
             play {
-			   if {[info exists args(url)]} {
+               if {[info exists args(url)]} {
                   SetAVTransportURI $args(url)
                }
                Play
