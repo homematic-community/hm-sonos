@@ -40,7 +40,11 @@ if [ "$1" == "" ]; then
 elif [ "$1" == "CCU2" ]; then
   cp -a ccu2/* ${WWWDIR}/bin/
 elif [ "$1" == "HM-RASPBERRYMATIC" ]; then
-  cp -a ccurm/* ${WWWDIR}/bin/
+  if [ "$(uname -m)" == "i686" ] || [ "$(uname -m)" == "x86_64" ]; then
+    cp -a ccu3x86/* ${WWWDIR}/bin/
+  else
+    cp -a ccu3/* ${WWWDIR}/bin/
+  fi
 fi
 
 # add menu entry

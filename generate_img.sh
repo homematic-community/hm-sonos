@@ -9,7 +9,8 @@ cp -a rc.d tmp/
 cp -a www tmp/
 cp -a ccu1 tmp/
 cp -a ccu2 tmp/
-cp -a ccurm tmp/
+cp -a ccu3 tmp/
+cp -a ccu3x86 tmp/
 cp -a update_script tmp/
 cp -a VERSION tmp/sonos2/
 cd tmp
