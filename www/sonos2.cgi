@@ -34,6 +34,7 @@ source [file join [file dirname [info script]] sonos2inc.tcl] ;# Include-File
 #     
 # action=                     
 #     play                                      -> Abspielen
+#                    url=<any valid sonos url>  -> Abspielen einer gegebenen URL z. B.  x-file-cifs://HOSTNAME/sharename/song.mp3
 #     pause                                     -> Pause
 #     stop                                      -> Stop
 #     toggle                                    -> Play / Pause umschalten
@@ -58,7 +59,7 @@ source [file join [file dirname [info script]] sonos2inc.tcl] ;# Include-File
 #                     member=Playername
 #     partymodus                                -> alle Player in eine Gruppe
 #
-#     playMessage                               -> entfernt Player aus Gruppe
+#     message                                   -> entfernt Player aus Gruppe
 #                     message=file.ext          -> z. B. action=message&message=Hallo.m4a
 #                     message=file.ext          -> z. B. action=message&message=1.mp3
 #
@@ -206,6 +207,9 @@ if {[info exists args(zone)]} {
                VolumeDown
             }
             play {
+               if {[info exists args(url)]} {
+                  SetAVTransportURI $args(url)
+               }
                Play
             }
             pause {
