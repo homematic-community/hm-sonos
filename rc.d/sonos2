@@ -10,6 +10,11 @@ START_SCRIPT=${ADDONNAME}.tcl
 STOP_SCRIPT=stop.tcl
 CONFIG_URL=/addons/${ADDONNAME}/settings/settings.cgi
 
+# check for unsupported platforms
+if grep -qim1 busmatic /www/api/methods/ccu/downloadFirmware.tcl; then
+  exit 13
+fi
+
 # change to addon directory
 cd ${ADDONDIR}
 
