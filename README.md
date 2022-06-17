@@ -7,12 +7,12 @@ This repository hosts the development on a HomeMatic CCU-Addon for enabling a CC
 * HomeMatic CCU1
 
 ## Installation
-1. Download the latest Addon release (https://github.com/jens-maus/hm-sonos/releases)
+1. Download the latest Addon release (https://github.com/homematic-community/hm-sonos/releases)
 2. Upload it via the HomeMatic WebUI provided Addon functionality.
 3. Login to your CCU and configure the Sonos Player Addon accordingly.
 
 ## Support
-If you encounter any problems or have any idea for enhancements of this addon please create a corresponding ticket at the issue tracker (https://github.com/jens-maus/hm-sonos/issues). For getting direct help a german speaking discussion fora is hosting a seperate discussion thread as well: http://homematic-forum.de/forum/viewtopic.php?f=41&t=26531
+If you encounter any problems or have any idea for enhancements of this addon please create a corresponding ticket at the issue tracker (https://github.com/homematic-community/hm-sonos/issues). For getting direct help a german speaking discussion fora is hosting a seperate discussion thread as well: http://homematic-forum.de/forum/viewtopic.php?f=41&t=26531
 
 ## License
 The Sonos CCU Addon as published in this Github repository is provided under the GPL license.
