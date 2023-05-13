@@ -58,7 +58,7 @@ source [file join [file dirname [info script]] sonos2inc.tcl] ;# Include-File
 #                     member=Playername
 #     partymodus                                -> alle Player in eine Gruppe
 #
-#     playMessage                               -> entfernt Player aus Gruppe
+#     playMessage                               -> Spiele eine Datei ab
 #                     message=file.ext          -> z. B. action=message&message=Hallo.m4a
 #                     message=file.ext          -> z. B. action=message&message=1.mp3
 #
